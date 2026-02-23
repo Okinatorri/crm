@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CRM</title>
+</head>
+<body>
+    <h2>CRM</h2>
+
+    <button onclick="createLead()">Creat Lead</button>
+    <br><br>
+
+    Lead ID: <input id="leadId">
+    <button onclick="startLead()">Start</button>
+    <button onclick="nextLead()">Next Lead</button>
+    <button onclick="analyze()">AI Analyze</button>
+    <button onclick="transfer()">Transfer to Sale</button>
+
+    <br><br>
+
+    Sale ID: <input id="saleId">
+    <button onclick="nextSale()">Next Sale</button>
+
+    <pre id="output"></pre>
+
+<script>
+async function createLead() {
+    const res = await fetch('/leads', {method:'POST'});
+    const data = await res.json();
+    document.getElementById('leadId').value = data.id;
+    document.getElementById('output').innerText = JSON.stringify(data, null, 2);
+}
+
+async function startLead() {
+    const id = document.getElementById('leadId').value;
+    const res = await fetch(`/leads/${id}/start`, {method:'POST'});
+    document.getElementById('output').innerText = await res.text();
+}
+
+async function nextLead() {
+    const id = document.getElementById('leadId').value;
+    const res = await fetch(`/leads/${id}/next`, {method:'POST'});
+    document.getElementById('output').innerText = await res.text();
+}
+
+async function analyze() {
+    const id = document.getElementById('leadId').value;
+    const res = await fetch(`/leads/${id}/analyze`, {method:'POST'});
+    document.getElementById('output').innerText = await res.text();
+}
+
+async function transfer() {
+    const id = document.getElementById('leadId').value;
+    const res = await fetch(`/leads/${id}/transfer`, {method:'POST'});
+    const data = await res.json();
+    document.getElementById('saleId').value = data.id;
+    document.getElementById('output').innerText = JSON.stringify(data, null, 2);
+}
+
+async function nextSale() {
+    const id = document.getElementById('saleId').value;
+    const res = await fetch(`/sales/${id}/next`, {method:'POST'});
+    document.getElementById('output').innerText = await res.text();
+}
+</script>
+
+</body>
+</html>
